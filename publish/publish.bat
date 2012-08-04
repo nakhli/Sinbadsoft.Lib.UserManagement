@@ -1,0 +1,1 @@
+NuGet.exe pack -Build -Properties Configuration=Release ..\Sinbadsoft.Lib.UserManagement\Sinbadsoft.Lib.UserManagement.csproj

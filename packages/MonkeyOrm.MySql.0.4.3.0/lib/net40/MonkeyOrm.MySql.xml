@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MonkeyOrm.MySql</name>
+    </assembly>
+    <members>
+        <member name="M:MonkeyOrm.Massive.AddObjectParameters(System.Data.IDbCommand,System.Object[])">
+            <summary>
+            Extension method for adding parameters based on object list.
+            Parameters are named pX where X is the position of the parameter
+            in the command's parameters list.
+            </summary>
+        </member>
+        <member name="M:MonkeyOrm.Massive.AddObjectParameter(System.Data.IDbCommand,System.String,System.Object)">
+            <summary>
+            Adds a parameter with the given name and value.
+            Calls the <see cref="P:MonkeyOrm.IInterceptors.UnknownValueType"/> for values of unknown types.
+            Null values are inserted as <see cref="F:System.DBNull.Value"/>.
+            </summary>
+        </member>
+        <member name="M:MonkeyOrm.Massive.AddPropertiesAsParameters(System.Data.IDbCommand,System.Object)">
+            <summary>
+            Adds a parameter for each property of the provided object, with its corresponding value
+            as the parameter value. <see cref="T:System.Guid"/> are translated to
+            a 16 bytes array. Null values will insert <see cref="F:System.DBNull.Value"/>.
+            </summary>
+        </member>
+        <member name="M:MonkeyOrm.Massive.ToExpandoList(System.Data.IDataReader)">
+            <summary>
+            Turns an IDataReader to a Dynamic list of things
+            </summary>
+        </member>
+        <member name="T:MonkeyOrm.DbProviderBasedConnectionFactory">
+            <summary>
+            An implementation of <see cref="T:MonkeyOrm.IConnectionFactory"/> based on <see cref="P:MonkeyOrm.DbProviderBasedConnectionFactory.DbProviderFactory"/>.
+            </summary>
+        </member>
+        <member name="P:MonkeyOrm.IInterceptors.UnknownValueType">
+            <summary>
+            This interceptor is used when creating a <see cref="T:System.Data.Common.DbParameter"/> command parameter object
+            for a value with a type that is not automatically managed by the ORM runtime.
+            This can happen during during the creation of a <see cref="T:System.Data.IDbCommand"/> commands for inserting,
+            updating, reading or deleting data; when one of the query parameters or one of the values to be
+            inserted is of an unknown type. This interceptor is then called to gives the user a chance to transform
+            this value back to a known type before the runtime creates its associated sql parameter 
+            <see cref="T:System.Data.Common.DbParameter"/> object.
+            
+            Values of known types will be automatically managed and will <strong>not</strong> involve a call to 
+            this interceptor. Known types are:
+            <list type="bullet">        
+            <item>integral or floating number</item>
+            <item><see cref="T:System.String"/></item>
+            <item><see cref="T:System.Guid"/></item>
+            <item><see cref="T:System.DateTime"/> or <see cref="T:System.TimeSpan"/></item>
+            <item><see cref="T:System.DBNull"/></item>
+            <item>any <see langword="null"/> value</item>
+            </list>
+            
+            For example, this handler can be used, to give the user a chance to serialize POCOs on insertion to JSON, binary, XML etc.
+            by transforming the intercepted value to a string or to a byte array.
+            <remarks>
+            This handler defaults to the identity function.
+            The value passed to the hander can never be <see langword="null"/>
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:MonkeyOrm.TransactionScopeExtension.SaveBatch(MonkeyOrm.ITransactionScope,System.String,System.Collections.Generic.IEnumerable{System.Object},System.Int32,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Saves a batch of objects. Sets the <see cref="P:MonkeyOrm.ITransactionScope.AutoCommit"/> to <see langword="true"/>
+            before executing the save batch operation; then restores it back to its original value.
+            </summary>
+        </member>
+    </members>
+</doc>

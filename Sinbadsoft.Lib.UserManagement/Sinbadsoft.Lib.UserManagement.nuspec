@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <title>$id$</title>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <description>$description$</description>
+    <summary>$description$</summary>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <tags>membership authentication user management mysql</tags>
+    <language>en-US</language>
+    <owners>Sinbadsoft</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/Sinbadsoft/Sinbadsoft.Lib</projectUrl>
+    <copyright>Copyright (c) Chaker Nakhli 2010-2012. Licensed under the Apache License, Version 2.0</copyright>
+    <dependencies>
+    </dependencies>
+    <releaseNotes>
+      * Register returns back user id
+      * Verification token now embeds an id to ease verification and string token parsing in client code.
+    </releaseNotes>
+  </metadata>
+</package>
