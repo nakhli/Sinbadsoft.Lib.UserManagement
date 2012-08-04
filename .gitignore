@@ -39,7 +39,7 @@ TestResults/
 #############
 # Resharper #
 #############
-/_ReSharper.*
+_ReSharper.*/
 *.ReSharper.*
 *.DotSettings.*
 ############

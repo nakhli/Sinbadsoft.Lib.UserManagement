@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sinbadsoft.Lib.UserManageme
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sinbadsoft.Lib.UserManagement.Tests", "Sinbadsoft.Lib.UserManagement.Tests\Sinbadsoft.Lib.UserManagement.Tests.csproj", "{C26C4A79-C980-4008-A407-23EB38393336}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{145123A6-953F-4441-9412-F7120D414F5C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C26C4A79-C980-4008-A407-23EB38393336} = {145123A6-953F-4441-9412-F7120D414F5C}
 	EndGlobalSection
 EndGlobal

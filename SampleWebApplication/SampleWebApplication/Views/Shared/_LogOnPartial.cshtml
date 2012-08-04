@@ -1,0 +1,8 @@
+﻿@if (ViewBag.AuthenticatedUser != null)
+{
+    <text>Welcome <strong>@ViewBag.AuthenticatedUser.Email</strong>!
+    [ @Html.ActionLink("Log Off", "LogOff", "Account") ]</text>
+}
+else {
+    @:[ @Html.ActionLink("Log On", "LogOn", "Account") ]
+}

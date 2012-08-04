@@ -12,6 +12,7 @@
 // <email>chaker.nakhli@sinbadsoft.com</email>
 // <date>2010/11/04</date>
 using System.Data;
+using MonkeyOrm;
 
 namespace Sinbadsoft.Lib.UserManagement
 {
@@ -19,10 +20,9 @@ namespace Sinbadsoft.Lib.UserManagement
     {
         public static void Create(IDbConnection connection)
         {
-            using (var command = connection.CreateCommand())
-            {
-                // NOTE(cnakhli) email length max is 320 chars see http://tools.ietf.org/html/rfc3696#section-3 
-                command.CommandText = @"CREATE TABLE `Users` (
+            // NOTE(cnakhli) email length max is 320 chars see http://tools.ietf.org/html/rfc3696#section-3 
+            connection.Execute(@"
+CREATE TABLE `Users` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Email` varchar(254) NOT NULL,
   `Password` binary(64) DEFAULT NULL,
@@ -32,18 +32,31 @@ namespace Sinbadsoft.Lib.UserManagement
   `VerificationToken` varbinary(24) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Email_uq` (`Email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-                command.ExecuteNonQuery();
-            }
+) ENGINE=InnoDB DEFAULT CHARSET=utf8");
         }
 
         public static void Drop(IDbConnection connection)
         {
-            using (var command = connection.CreateCommand())
+            connection.Execute(@"DROP TABLE IF EXISTS `Users`");
+        }
+
+        public static bool Exists(IDbConnection connection)
+        {
+            const string Query = @"SELECT EXISTS(SELECT 1 
+                      FROM information_schema.tables 
+                      WHERE table_schema=@Database AND table_name='Users') AS HasTable";
+            return connection.ReadOne(Query, new { connection.Database }).HasTable != 0;
+        }
+
+        public static bool CreateIfMissing(IDbConnection connection)
+        {
+            if (!Exists(connection))
             {
-                command.CommandText = @"DROP TABLE IF EXISTS `Users`";
-                command.ExecuteNonQuery();
+                Create(connection);
+                return true;
             }
+
+            return false;
         }
     }
 }

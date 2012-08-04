@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sinbadsoft.Lib.UserManagement</name>
+    </assembly>
+    <members>
+        <member name="F:Sinbadsoft.Lib.UserManagement.Authentication.AuthenticationToken.MinTicketLength">
+            <summary>
+            Minimum email length = 3, min user id length = 1, separator length = 1
+            ticket template: "email;id;data" where data is optional.
+            </summary>
+        </member>
+        <member name="T:Sinbadsoft.Lib.UserManagement.Authentication.AuthenticationTokenManager">
+            <summary>
+            An implementation of <see cref="T:Sinbadsoft.Lib.UserManagement.Authentication.IAuthenticationTokenManager"/> based on <see cref="T:System.Web.Security.FormsAuthentication"/>.
+            </summary>
+        </member>
+        <member name="M:Sinbadsoft.Lib.UserManagement.Authentication.IAuthenticationTokenManager.Set(System.String,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Sets an authentication token in the cookie for the given email and id.
+            The email, id and the extra data will be embedded in the token.
+            </summary>
+            <param name="email">User email.</param>
+            <param name="id">User identifier.</param>
+            <param name="persistent"><see langword="true"/> to create a persistent cookie, <see langword="false"/> otherwie.</param>
+            <param name="data">Extra data to embedd in the authentication cookie. Should be short.</param>
+        </member>
+        <member name="M:Sinbadsoft.Lib.UserManagement.Authentication.IAuthenticationTokenManager.Remove">
+            <summary>
+            Removes the authentication token cookie.
+            </summary>
+        </member>
+        <member name="M:Sinbadsoft.Lib.UserManagement.Authentication.IAuthenticationTokenManager.Verify">
+            <summary>
+            Decrypts and extracts the user info embedded in the authentication ticket.
+            If the ticket is invalid or has bad format, the authentication is revoked
+            and the token is removed using <see cref="M:Sinbadsoft.Lib.UserManagement.Authentication.IAuthenticationTokenManager.Remove"/>.
+            </summary>
+            <returns>Authentication info.</returns>
+        </member>
+        <member name="M:Sinbadsoft.Lib.UserManagement.IUsersManager.Login(System.String,System.String)">
+            <summary>
+            Attempts to log user in with the provided email and password.
+            </summary>
+            <param name="email">User email used as unique identifier.</param>
+            <param name="password">User password.</param>
+            <returns><see cref="F:Sinbadsoft.Lib.UserManagement.LoginResult.Success"/> if login is successful.</returns>
+        </member>
+        <member name="F:Sinbadsoft.Lib.UserManagement.VerificationToken.DataLength">
+            <summary>
+            8 bytes to store a <see cref="T:System.DateTime"/> and 16 bytes for the random part.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sinbadsoft.Lib.Model</name>
+    </assembly>
+    <members>
+        <member name="M:Sinbadsoft.Lib.Model.ToExpando.ToExpandoExtension.ToExpando(System.Object,System.Object,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Turns the given object <paramref name="obj"/> into an <see cref="T:System.Dynamic.ExpandoObject"/>.
+            If <paramref name="obj"/> is:
+            <list type="bullet">
+            <item><description>
+            <see langword="null"/> then a new empty <see cref="T:System.Dynamic.ExpandoObject"/> is returned.
+            </description></item>
+            <item><description>
+            <see cref="T:System.Collections.Specialized.NameValueCollection"/>, <see cref="T:System.Collections.IDictionary"/>, <see cref="T:System.Dynamic.ExpandoObject"/> or any
+            <see cref="T:System.Collections.Generic.IDictionary`2"/> then an expando with the provided keys 
+            (converted to strings) and values is returned.
+            </description></item>
+            <item><description>
+            <see cref="T:System.Data.IDataReader"/> then each column/value of the current row
+            is converted to an exapndo key/value. No <see cref="M:System.Data.IDataReader.Read"/> call is made 
+            and all <see cref="T:System.DBNull"/> values are converted to <see langword="null"/> or to the default
+            value of the hinted type if a type hint is provided any.
+            </description></item>
+            </list>
+            </summary>
+            <param name="obj">The source object.</param>
+            <param name="typeHint">Object or dictionary with properites or keys of type <see cref="T:System.Type"/>.</param>
+            <param name="whitelist">Exhaustive set of properties to include.</param>
+            <param name="blacklist">Poperties to exclude from the conversion.</param>
+        </member>
+    </members>
+</doc>
