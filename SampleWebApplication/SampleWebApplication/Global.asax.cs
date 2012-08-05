@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Configuration;
+﻿using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -31,7 +27,6 @@ namespace SampleWebApplication
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
-
         }
 
         protected void Application_Start()
@@ -47,14 +42,7 @@ namespace SampleWebApplication
             using (var connection = connectionFactory.Create())
             {
                 connection.Open();
-                if (connection.ReadOne(
-                    @"SELECT EXISTS(SELECT 1 
-                      FROM information_schema.tables 
-                      WHERE table_schema=@Database AND table_name='Users') As HasTable",
-                    new { connection.Database }).HasTable != 0)
-                {
-                    UsersTable.Create(connection);
-                }
+                UsersTable.CreateIfMissing(connection);
             }
         }
     }

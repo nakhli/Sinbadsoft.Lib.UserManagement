@@ -18,10 +18,10 @@ namespace SampleWebApplication.Controllers
         {
             var connectionString = WebConfigurationManager.ConnectionStrings["default"].ConnectionString;
             var connectionFactory = new DbProviderBasedConnectionFactory("default", connectionString);
-            this.UsersManager = new UsersManager(connectionFactory);
+            this.UsersManager = new UserManager(connectionFactory);
         }
 
-        private IUsersManager UsersManager { get; set; }
+        private IUserManager UsersManager { get; set; }
 
         public ActionResult LogOn()
         {

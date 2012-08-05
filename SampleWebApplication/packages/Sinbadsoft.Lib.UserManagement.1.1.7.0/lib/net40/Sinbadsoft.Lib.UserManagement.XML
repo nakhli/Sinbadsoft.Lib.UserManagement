@@ -38,7 +38,7 @@
             </summary>
             <returns>Authentication info.</returns>
         </member>
-        <member name="M:Sinbadsoft.Lib.UserManagement.IUsersManager.Login(System.String,System.String)">
+        <member name="M:Sinbadsoft.Lib.UserManagement.IUserManager.Login(System.String,System.String)">
             <summary>
             Attempts to log user in with the provided email and password.
             </summary>
