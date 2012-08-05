@@ -1,4 +1,4 @@
-// <copyright file="EmptySchemaTests.cs" company="Sinbadsoft">
+// <copyright file="EmptySchemaTest.cs" company="Sinbadsoft">
 // Copyright (c) Chaker Nakhli 2010
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -20,7 +20,7 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
         [Test]
         public void Login()
         {
-            var membership = new UsersManager(this.ConnectionFactory());
+            var membership = new UserManager(this.ConnectionFactory());
             var loginResult = membership.Login("joe@doe.com", "p@ssw0rd");
             Assert.AreEqual(LoginResult.UnknownUser, loginResult);
         }

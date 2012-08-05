@@ -18,7 +18,7 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
     [TestFixture]
     public class LoginTests : DbTestBase
     {
-        private IUsersManager membership;
+        private IUserManager membership;
 
         [TestFixtureSetUp]
         public new void FixtureSetup()
@@ -29,7 +29,7 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
         [SetUp]
         public void SetUp()
         {
-            this.membership = new UsersManager(this.ConnectionFactory());
+            this.membership = new UserManager(this.ConnectionFactory());
         }
 
         [Test]

@@ -60,6 +60,7 @@
     <Compile Include="RegisterTest.cs" />
     <Compile Include="ScenariosTest.cs" />
     <Compile Include="TestData.cs" />
+    <Compile Include="UsersTableTests.cs" />
     <Compile Include="VerificationTokenTest.cs" />
   </ItemGroup>
   <ItemGroup>

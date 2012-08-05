@@ -1,4 +1,4 @@
-// <copyright file="UsersManager.cs" company="Sinbadsoft">
+// <copyright file="UserManager.cs" company="Sinbadsoft">
 // Copyright (c) Chaker Nakhli 2010-2012
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -17,18 +17,18 @@ using MonkeyOrm;
 
 namespace Sinbadsoft.Lib.UserManagement
 {
-    public class UsersManager : IUsersManager
+    public class UserManager : IUserManager
     {
         public const int DefaultMinPasswordLength = 5;
 
-        public UsersManager(IConnectionFactory connectionFactory, IPasswordHasher hasher)
+        public UserManager(IConnectionFactory connectionFactory, IPasswordHasher hasher)
         {
             this.ConnectionFactory = connectionFactory;
             this.PasswordHasher = hasher;
             this.MinPasswordLength = DefaultMinPasswordLength;
         }
 
-        public UsersManager(IConnectionFactory connectionFactory)
+        public UserManager(IConnectionFactory connectionFactory)
             : this(connectionFactory, new PasswordHasher())
         {
         }

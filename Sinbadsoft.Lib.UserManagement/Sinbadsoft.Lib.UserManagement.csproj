@@ -60,10 +60,10 @@
     <Compile Include="Authentication\AuthenticationTokenManager.cs" />
     <Compile Include="Authentication\IAuthenticationTokenManager.cs" />
     <Compile Include="IPasswordHasher.cs" />
-    <Compile Include="IUsersManager.cs" />
+    <Compile Include="IUserManager.cs" />
     <Compile Include="LoginResult.cs" />
     <Compile Include="PasswordHasher.cs" />
-    <Compile Include="UsersManager.cs" />
+    <Compile Include="UserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterResult.cs" />
     <Compile Include="UsersTable.cs" />

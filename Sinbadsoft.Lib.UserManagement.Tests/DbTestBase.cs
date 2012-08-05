@@ -22,8 +22,14 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
 {
     public class DbTestBase
     {
-        private const string ConnectionString = "server=localhost;user id=developer;password=etOile03;port=3306;";
+        private const string ConnectionStringTemplate = "server=localhost;user id=developer;password=etOile03;port=3306;";
+        private readonly bool createUsersTable;
         private string connectionString;
+
+        protected DbTestBase(bool createUsersTable = true)
+        {
+            this.createUsersTable = createUsersTable;
+        }
 
         protected string DatabaseName { get; set; }
 
@@ -31,32 +37,35 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
         public void FixtureSetup()
         {
             this.DatabaseName = this.GetType().Name + DateTime.UtcNow.ToString("yyyy_MM_dd__HH_mm_ss");
-            using (var connection = new MySqlConnection(ConnectionString))
-            using (var command = connection.CreateCommand())
-            {
-                connection.Open();
-                command.CommandText = string.Format("CREATE DATABASE IF NOT EXISTS `{0}`;", this.DatabaseName);
-                command.ExecuteNonQuery();
-            }
 
-            var connectionStringBuilder = new MySqlConnectionStringBuilder(ConnectionString) { Database = this.DatabaseName };
+            this.ConnectionFactory(ConnectionStringTemplate)
+                .Execute("CREATE DATABASE IF NOT EXISTS " + this.DatabaseName);
+
+            var connectionStringBuilder = new MySqlConnectionStringBuilder(ConnectionStringTemplate)
+                {
+                    Database = this.DatabaseName
+                };
             this.connectionString = connectionStringBuilder.ConnectionString;
-            using (var connection = this.ConnectionFactory().Create())
+
+            if (this.createUsersTable)
             {
-                connection.Open();
-                UsersTable.Create(connection);
+                using (var connection = this.ConnectionFactory().Create())
+                {
+                    connection.Open();
+                    UsersTable.Create(connection);
+                }
             }
         }
 
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            this.ConnectionFactory().Execute(string.Format("DROP DATABASE IF EXISTS `{0}`;", this.DatabaseName));
+            this.ConnectionFactory().Execute("DROP DATABASE IF EXISTS " + this.DatabaseName);
         }
 
-        protected IConnectionFactory ConnectionFactory()
+        protected IConnectionFactory ConnectionFactory(string connStr = null)
         {
-            return new ConnectionFactory<MySqlConnection>(this.connectionString);
+            return new ConnectionFactory<MySqlConnection>(connStr ?? this.connectionString);
         }
     }
 }

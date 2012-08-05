@@ -18,13 +18,13 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
     [TestFixture]
     public class ScenariosTest : DbTestBase
     {
-        private IUsersManager membership;
+        private IUserManager membership;
 
         [SetUp]
         public void SetUp()
         {
             TestData.InsertData(this.ConnectionFactory(), true);
-            this.membership = new UsersManager(this.ConnectionFactory());
+            this.membership = new UserManager(this.ConnectionFactory());
         }
 
         [Test]

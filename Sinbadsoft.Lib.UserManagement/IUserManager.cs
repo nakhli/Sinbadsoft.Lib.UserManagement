@@ -1,4 +1,4 @@
-// <copyright file="IUsersManager.cs" company="Sinbadsoft">
+// <copyright file="IUserManager.cs" company="Sinbadsoft">
 // Copyright (c) Chaker Nakhli 2010
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,7 +14,7 @@
 
 namespace Sinbadsoft.Lib.UserManagement
 {
-    public interface IUsersManager
+    public interface IUserManager
     {
         int MinPasswordLength { get; set; }
 
