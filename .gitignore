@@ -10,10 +10,10 @@
 *.cache
 *.suo
 # Include dlls if they’re in the NuGet packages directory
-!/packages/*/lib/*.dll
-!/packages/*/lib/*/*.dll
-!/packages/*/lib/*.pdb
-!/packages/*/lib/*/*.pdb
+!**/packages/*/lib/*.dll
+!**/packages/*/lib/*/*.dll
+!**/packages/*/lib/*.pdb
+!**/packages/*/lib/*/*.pdb
 # Include dlls if they’re in bin deployment directory
 !**/_bin_deployableAssemblies/*.dll
 # Include dlls if they're in the CommonReferences directory
