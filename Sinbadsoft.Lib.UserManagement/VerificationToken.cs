@@ -24,7 +24,7 @@ namespace Sinbadsoft.Lib.UserManagement
         /// </summary>
         private const int DataLength = 16 + sizeof(double);
 
-        private VerificationToken(byte[] token)
+        internal VerificationToken(byte[] token)
         {
             this.Data = token;
             this.Timestamp = DateTime.FromBinary(BitConverter.ToInt64(token, 0));

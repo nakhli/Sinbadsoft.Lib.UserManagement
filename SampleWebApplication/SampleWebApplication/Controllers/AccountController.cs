@@ -2,9 +2,6 @@
 using System.Net.Mail;
 using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Web.Routing;
-
-using MonkeyOrm;
 
 using SampleWebApplication.Models;
 
@@ -16,12 +13,11 @@ namespace SampleWebApplication.Controllers
     {
         public AccountController()
         {
-            var connectionString = WebConfigurationManager.ConnectionStrings["default"].ConnectionString;
-            var connectionFactory = new DbProviderBasedConnectionFactory("default", connectionString);
-            this.UsersManager = new UserManager(connectionFactory);
+            var connectionSettings = WebConfigurationManager.ConnectionStrings["default"];
+            this.UserManager = new UserManager(connectionSettings.ProviderName, connectionSettings.ConnectionString);
         }
 
-        private IUserManager UsersManager { get; set; }
+        private IUserManager UserManager { get; set; }
 
         public ActionResult LogOn()
         {
@@ -34,24 +30,27 @@ namespace SampleWebApplication.Controllers
             if (ModelState.IsValid)
             {
                 int id;
-                var loginResult = this.UsersManager.Login(model.Email, model.Password, out id);
+                var loginResult = this.UserManager.Login(model.Email, model.Password, out id);
 
                 if (LoginResult.Success == loginResult)
                 {
-                    this.AuthenticationManager.Set(model.Email, id, true);
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    this.TokenManager.Set(model.Email, id, true);
+                    if (Url.IsLocalUrl(returnUrl)
+                        && returnUrl.Length > 1
+                        && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//")
+                        && !returnUrl.StartsWith("/\\"))
                     {
                         return Redirect(returnUrl);
                     }
 
-                    return this.RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 var errorMessage = loginResult == LoginResult.EmailNotVerified
                     ? "Your email is not verified yet."
                     : "The user name or password provided is incorrect.";
-                this.ModelState.AddModelError(string.Empty, errorMessage);
+                ModelState.AddModelError(string.Empty, errorMessage);
             }
 
             // If we got this far, something failed, redisplay form
@@ -60,34 +59,32 @@ namespace SampleWebApplication.Controllers
 
         public ActionResult LogOff()
         {
-            this.AuthenticationManager.Remove();
+            this.TokenManager.Remove();
             return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Register()
         {
-            ViewBag.MinPasswordLength = this.UsersManager.MinPasswordLength;
+            ViewBag.MinPasswordLength = this.UserManager.MinPasswordLength;
             return View();
         }
 
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
-            // TODO(cnakhli) need captcha?
-
             if (ModelState.IsValid)
             {
                 VerificationToken token;
                 int id;
-                var registerResult = this.UsersManager.Register(model.Email, model.Password, out token, out id);
+                var registerResult = this.UserManager.Register(model.Email, model.Password, out token, out id);
 
                 if (registerResult == RegisterResult.Success)
                 {
-                    this.SendVerificationEmail(id, model.Email, token.ToString());
+                    SendVerificationEmail(id, model.Email, token.ToString());
                     return View("VerificationSent");
                 }
 
-                this.ModelState.AddModelError(string.Empty, ErrorCodeToString(registerResult));
+                ModelState.AddModelError(string.Empty, RegisterCodeToErrorString(registerResult));
             }
 
             // If we got this far, something failed, redisplay form
@@ -103,14 +100,19 @@ namespace SampleWebApplication.Controllers
 
             // NOTE you can check for token freshness using verificationToken.IsFresh()
             string email;
-            if (VerifyResult.Success != this.UsersManager.CheckAndClearVerificationToken(id, verificationToken, out email))
+            var verificationResult = this.UserManager.CheckAndClearVerificationToken(id, verificationToken, out email);
+            if (verificationResult != VerifyResult.Success)
             {
                 // Invalid token, redirect to logon
                 // We can display a nice message to inform user that his token is invalid and invite him to register
                 return RedirectToAction("LogOn");
             }
 
-            this.AuthenticationManager.Set(email, id, false);
+            // Valid verification token! log the user in authomatically no need to require login/password.
+            // you can skip the automatic authentication if you want and redirect to a login page though.
+            this.TokenManager.Set(email, id);
+
+            // redirect to home, an action with Authorize attribute (requires authentication)
             return RedirectToAction("Index", "Home");
         }
 
@@ -126,7 +128,7 @@ namespace SampleWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (this.UsersManager.ChangePassword(this.AuthenticatedUser.Id, model.OldPassword, model.NewPassword))
+                if (this.UserManager.ChangePassword(AuthenticatedUser.Id, model.OldPassword, model.NewPassword))
                 {
                     return RedirectToAction("ChangePasswordSuccess");
                 }
@@ -143,7 +145,7 @@ namespace SampleWebApplication.Controllers
             return View();
         }
 
-        private static string ErrorCodeToString(RegisterResult createStatus)
+        private static string RegisterCodeToErrorString(RegisterResult createStatus)
         {
             switch (createStatus)
             {

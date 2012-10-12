@@ -31,7 +31,7 @@ CREATE TABLE `Users` (
   `UserBlocked` tinyint(1) NOT NULL DEFAULT '0',
   `VerificationToken` varbinary(24) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `Email_uq` (`Email`)
+  UNIQUE KEY (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
         }
 
