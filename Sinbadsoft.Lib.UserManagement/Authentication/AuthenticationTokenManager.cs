@@ -21,7 +21,7 @@ namespace Sinbadsoft.Lib.UserManagement.Authentication
     /// </summary>
     public class AuthenticationTokenManager : IAuthenticationTokenManager
     {
-        public void Set(string email, int id, bool persistent, string data = null)
+        public void Set(string email, int id, bool persistent = false, string data = null)
         {
             string ticket = AuthenticationToken.Generate(email, id);
             FormsAuthentication.SetAuthCookie(ticket, persistent);

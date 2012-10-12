@@ -12,6 +12,7 @@ namespace SampleWebApplication.Controllers
             return View();
         }
 
+        // About action doesn't need authentication
         public ActionResult About()
         {
             return View();

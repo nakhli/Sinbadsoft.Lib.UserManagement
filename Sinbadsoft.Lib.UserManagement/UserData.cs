@@ -1,4 +1,4 @@
-// <copyright file="RegisterResult.cs" company="Sinbadsoft">
+// <copyright file="UserData.cs" company="Sinbadsoft">
 // Copyright (c) Chaker Nakhli 2010
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,15 +10,22 @@
 // </copyright>
 // <author>Chaker Nakhli</author>
 // <email>chaker.nakhli@sinbadsoft.com</email>
-// <date>2010/11/04</date>
+// <date>2012/08/09</date>
+
 namespace Sinbadsoft.Lib.UserManagement
 {
-    public enum RegisterResult
+    public class UserData
     {
-        DuplicateEmail,
-        InvalidPassword,
-        InvalidEmail,
-        UserBlocked,
-        Success,
+        public int Id { get; set; }
+
+        public string Email { get; set; }
+
+        public bool UserBlocked { get; set; }
+
+        public bool EmailVerified { get; set; }
+
+        public bool PasswordSet { get; set; }
+        
+        public VerificationToken VerificationToken { get; set; }
     }
 }

@@ -16,14 +16,14 @@ namespace Sinbadsoft.Lib.UserManagement.Authentication
     public interface IAuthenticationTokenManager
     {
         /// <summary>
-        /// Sets an authentication token in the cookie for the given email and id.
-        /// The email, id and the extra data will be embedded in the token.
+        /// Sets a cookie with the crytpted authentication token. The token embeds the provided
+        /// <paramref name="email"/>, <paramref name="id"/> and optional additional data <paramref name="data"/>.
         /// </summary>
         /// <param name="email">User email.</param>
         /// <param name="id">User identifier.</param>
         /// <param name="persistent"><see langword="true"/> to create a persistent cookie, <see langword="false"/> otherwie.</param>
         /// <param name="data">Extra data to embedd in the authentication cookie. Should be short.</param>
-        void Set(string email, int id, bool persistent, string data = null);
+        void Set(string email, int id, bool persistent = false, string data = null);
 
         /// <summary>
         /// Removes the authentication token cookie.
@@ -31,11 +31,11 @@ namespace Sinbadsoft.Lib.UserManagement.Authentication
         void Remove();
 
         /// <summary>
-        /// Decrypts and extracts the user info embedded in the authentication ticket.
+        /// Decrypts and extracts the user information embedded in the authentication ticket.
         /// If the ticket is invalid or has bad format, the authentication is revoked
         /// and the token is removed using <see cref="Remove"/>.
         /// </summary>
-        /// <returns>Authentication info.</returns>
+        /// <returns>The user information embedded in the authentication ticket.</returns>
         AuthenticatedUserInfo Verify();
     }
 }

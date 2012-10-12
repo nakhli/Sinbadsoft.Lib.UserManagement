@@ -35,21 +35,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MonkeyOrm.MySql, Version=0.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MonkeyOrm.MySql, Version=0.4.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MonkeyOrm.MySql.0.4.4.0\lib\net40\MonkeyOrm.MySql.dll</HintPath>
+      <HintPath>..\packages\MonkeyOrm.MySql.0.4.5.0\lib\net40\MonkeyOrm.MySql.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MySql.Data.6.5.4\lib\net40\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Sinbadsoft.Lib.Model, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Sinbadsoft.Lib.Model, Version=0.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sinbadsoft.Lib.Model.0.7.0.0\lib\net40\Sinbadsoft.Lib.Model.dll</HintPath>
+      <HintPath>..\packages\Sinbadsoft.Lib.Model.0.7.2.0\lib\net40\Sinbadsoft.Lib.Model.dll</HintPath>
     </Reference>
-    <Reference Include="Sinbadsoft.Lib.UserManagement, Version=1.1.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sinbadsoft.Lib.UserManagement.1.1.7.0\lib\net40\Sinbadsoft.Lib.UserManagement.dll</HintPath>
+    <Reference Include="Sinbadsoft.Lib.UserManagement, Version=1.1.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sinbadsoft.Lib.UserManagement.1.1.8.0\lib\net40\Sinbadsoft.Lib.UserManagement.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -94,16 +93,6 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\MicrosoftAjax.js" />
-    <Content Include="Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
@@ -118,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

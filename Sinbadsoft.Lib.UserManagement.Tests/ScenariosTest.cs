@@ -82,7 +82,7 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
         }
 
         [Test]
-        public void ResetVerificationTokenDoesntBlockLoginOnVerifiedEmail()
+        public void ResetVerificationTokenOnVerifiedEmailDoesntPreventLogin()
         {
             var password = TestData.SamRegularUser.StringPassword;
             var email = TestData.SamRegularUser.Email;
@@ -107,7 +107,7 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
         }
 
         [Test]
-        public void ResetVerificationTokenThenClearVerificationAndSetNewPassword()
+        public void ResetPasswordForVerifiedUser()
         {
             var password = TestData.SamRegularUser.StringPassword;
             var email = TestData.SamRegularUser.Email;
@@ -120,8 +120,10 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
             VerificationToken token;
             Assert.AreEqual(VerifyResult.Success, this.membership.ResetVerificationToken(email, out token));
 
-            // Check and clear verification with new password
+            // Check verification token
             Assert.AreEqual(VerifyResult.Success, this.membership.CheckVerificationToken(id, token));
+
+            // Check and clear verification with new password
             const string NewPassword = "my new pass";
             Assert.AreEqual(VerifyResult.Success, this.membership.CheckAndClearVerificationToken(id, token, NewPassword));
 

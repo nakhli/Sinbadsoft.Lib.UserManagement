@@ -1,4 +1,5 @@
-﻿using System.Web.Configuration;
+﻿using System.Data.Common;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -36,11 +37,12 @@ namespace SampleWebApplication
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            var connectionString = WebConfigurationManager.ConnectionStrings["default"].ConnectionString;
-            var connectionFactory = new DbProviderBasedConnectionFactory("default", connectionString);
+            var connectionSettings = WebConfigurationManager.ConnectionStrings["default"];
 
-            using (var connection = connectionFactory.Create())
+            // Optional: creates the Users table if it is not already there.
+            using (var connection = DbProviderFactories.GetFactory(connectionSettings.ProviderName).CreateConnection())
             {
+                connection.ConnectionString = connectionSettings.ConnectionString;
                 connection.Open();
                 UsersTable.CreateIfMissing(connection);
             }

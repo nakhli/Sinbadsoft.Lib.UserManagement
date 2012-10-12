@@ -17,8 +17,8 @@
     <dependencies>
     </dependencies>
     <releaseNotes>
-      * MAJOR BREAKING CHANGE: IUsersManger renamed to IUserManager ('s' removed).
-      * Added helper methods to detect existence of Users table
+      * Added LoadUserData methods on IUserManager. They replace IsPasswordSet method, removed.
+      * Added new constructors for UserManager. 
     </releaseNotes>
   </metadata>
 </package>

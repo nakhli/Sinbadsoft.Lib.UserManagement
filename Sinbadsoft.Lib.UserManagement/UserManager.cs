@@ -11,7 +11,10 @@
 // <author>Chaker Nakhli</author>
 // <email>chaker.nakhli@sinbadsoft.com</email>
 // <date>2010/11/04</date>
+
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using MonkeyOrm;
 
@@ -21,21 +24,33 @@ namespace Sinbadsoft.Lib.UserManagement
     {
         public const int DefaultMinPasswordLength = 5;
 
-        public UserManager(IConnectionFactory connectionFactory, IPasswordHasher hasher)
+        public UserManager(IConnectionFactory connectionFactory, IPasswordHasher hasher = null)
         {
-            this.ConnectionFactory = connectionFactory;
-            this.PasswordHasher = hasher;
+            this.Connection = connectionFactory;
+            this.PasswordHasher = hasher ?? new PasswordHasher();
             this.MinPasswordLength = DefaultMinPasswordLength;
         }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserManager"/> class with
+        /// a database provider invariant name, a connection string and a password hasher.
+        /// </summary>
+        /// <param name="providerName">Invariant name of a provider. Used to get a used to get <see cref="DbProviderFactory"/>.</param>
+        /// <param name="connectionString">Connection string to connect to the database.</param>
+        /// <param name="hasher">Password hashing strategy.</param>
+        public UserManager(string providerName, string connectionString, IPasswordHasher hasher = null)
+            : this(new DbProviderBasedConnectionFactory(providerName, connectionString), hasher)
+        {
+        }
 
-        public UserManager(IConnectionFactory connectionFactory)
-            : this(connectionFactory, new PasswordHasher())
+        public UserManager(Func<IDbConnection> connectionFactory, IPasswordHasher hasher = null)
+            : this(new FunctionBasedConnectionFactory(connectionFactory), hasher)
         {
         }
 
         public int MinPasswordLength { get; set; }
 
-        public IConnectionFactory ConnectionFactory { get; private set; }
+        public IConnectionFactory Connection { get; private set; }
 
         public IPasswordHasher PasswordHasher { get; set; }
 
@@ -51,6 +66,7 @@ namespace Sinbadsoft.Lib.UserManagement
             if (string.IsNullOrWhiteSpace(password))
             {
                 id = 0;
+            
                 return LoginResult.WrongPassword;
             }
 
@@ -60,32 +76,32 @@ namespace Sinbadsoft.Lib.UserManagement
                 return LoginResult.UnknownUser;
             }
 
-            var userInfo = this.ConnectionFactory.ReadOne(
+            var userInfo = this.Connection.ReadOne(
                 "SELECT Id, Email, Password, Salt, EmailVerified, UserBlocked FROM Users WHERE Email=@email",
                 new { email });
 
             return this.ValidateUserInfo(userInfo, password, out id);
         }
 
-        public RegisterResult Register(string email, string password, out VerificationToken verificationToken)
+        public RegisterResult Register(string email, string password, out VerificationToken token)
         {
             int id;
-            return this.Register(email, password, out verificationToken, out id);
+            return this.Register(email, password, out token, out id);
         }
 
-        public RegisterResult Register(string email, string password, out VerificationToken verificationToken, out int id)
+        public RegisterResult Register(string email, string password, out VerificationToken token, out int id)
         {
             if (!ValidateAndNormalizeEmail(ref email))
             {
                 id = 0;
-                verificationToken = null;
+                token = null;
                 return RegisterResult.InvalidEmail;
             }
 
             if (password != null && !this.ValidatePassword(password))
             {
                 id = 0;
-                verificationToken = null;
+                token = null;
                 return RegisterResult.InvalidPassword;
             }
 
@@ -96,7 +112,7 @@ namespace Sinbadsoft.Lib.UserManagement
                 hash = this.PasswordHasher.Hash(password, ref salt);
             }
 
-            verificationToken = VerificationToken.Generate();
+            token = VerificationToken.Generate();
 
             var user = new
                     {
@@ -105,13 +121,30 @@ namespace Sinbadsoft.Lib.UserManagement
                         Email = email,
                         EmailVerified = false,
                         UserBlocked = false,
-                        VerificationToken = verificationToken.Data
+                        VerificationToken = token.Data
                     };
 
             try
             {
-                this.ConnectionFactory.Save("Users", user, out id);
-                return RegisterResult.Success;
+                int userId = 0;
+                var result = this.Connection.InTransaction(true).Do(
+                t =>
+                {
+                    var userInfo = t.ReadOne("SELECT Id, UserBlocked FROM Users WHERE Email=@email", new { email });
+                    if (userInfo != null)
+                    {
+                        userId = userInfo.Id;
+                        return userInfo.UserBlocked 
+                            ? RegisterResult.UserBlocked
+                            : RegisterResult.DuplicateEmail;
+                    }
+
+                    t.Save("Users", user, out userId);
+                    return RegisterResult.Success;
+                });
+
+                id = userId;
+                return result;
             }
             catch (DbException exception)
             {
@@ -120,7 +153,7 @@ namespace Sinbadsoft.Lib.UserManagement
                 if (exceptionData is int && (int)exceptionData == MysqlDuplicateEntryServerErrorCode)
                 {
                     id = 0;
-                    verificationToken = null;
+                    token = null;
                     return RegisterResult.DuplicateEmail;
                 }
 
@@ -130,11 +163,6 @@ namespace Sinbadsoft.Lib.UserManagement
 
         public VerifyResult CheckAndClearVerificationToken(int id, VerificationToken token, string newPassword = null)
         {
-            if (newPassword != null && !this.ValidatePassword(newPassword))
-            {
-                return VerifyResult.InvalidPassword;
-            }
-
             string email;
             return this.CheckAndClearVerificationToken(id, token, out email, newPassword);
         }
@@ -142,18 +170,19 @@ namespace Sinbadsoft.Lib.UserManagement
         public VerifyResult CheckAndClearVerificationToken(int id, VerificationToken token, out string email, string newPassword = null)
         {
             string userEmail = null;
-            VerifyResult result = this.ConnectionFactory.InTransaction(true).Do(
+            VerifyResult result = this.Connection.InTransaction(true).Do(
                 t =>
                 {
-                    var data = t.ReadOne("SELECT Email, UserBlocked, VerificationToken FROM Users WHERE Id=@id", new { id });
-                    
+                    var data = t.ReadOne("SELECT Email, Password, UserBlocked, VerificationToken FROM Users WHERE Id=@id", new { id });
+
                     result = VerifyToken(data, token, out userEmail);
 
-                    if (newPassword != null && !this.ValidatePassword(newPassword))
+                    if ((newPassword != null && !this.ValidatePassword(newPassword))
+                        || (newPassword == null && data.Password == null))
                     {
                         return VerifyResult.InvalidPassword;
                     }
-                    
+
                     if (result != VerifyResult.Success)
                     {
                         return result;
@@ -182,7 +211,7 @@ namespace Sinbadsoft.Lib.UserManagement
             {
                 return VerifyResult.InvalidToken;
             }
-            
+
             string email;
             return this.CheckVerificationToken(id, token, out email);
         }
@@ -190,7 +219,7 @@ namespace Sinbadsoft.Lib.UserManagement
         public VerifyResult CheckVerificationToken(int id, VerificationToken token, out string email)
         {
             string userEmail = null;
-            var result = this.ConnectionFactory.InTransaction(true).Do(t =>
+            var result = this.Connection.InTransaction(true).Do(t =>
                 {
                     var data = t.ReadOne("SELECT Email, UserBlocked, VerificationToken FROM Users WHERE Id=@id", new { id });
                     return VerifyToken(data, token, out userEmail);
@@ -201,14 +230,22 @@ namespace Sinbadsoft.Lib.UserManagement
 
         public VerifyResult ResetVerificationToken(string email, out VerificationToken token)
         {
+            int id;
+            return this.ResetVerificationToken(email, out token, out id);
+        }
+
+        public VerifyResult ResetVerificationToken(string email, out VerificationToken token, out int id)
+        {
             if (!ValidateAndNormalizeEmail(ref email))
             {
                 token = null;
+                id = 0;
                 return VerifyResult.UnknownUser;
             }
 
             VerificationToken localToken = null;
-            var result = this.ConnectionFactory.InTransaction(true).Do(
+            int localId = 0;
+            var result = this.Connection.InTransaction(true).Do(
                 t =>
                 {
                     var data = t.ReadOne("SELECT Id, EmailVerified, UserBlocked FROM Users WHERE Email=@email", new { email });
@@ -218,17 +255,19 @@ namespace Sinbadsoft.Lib.UserManagement
                         return VerifyResult.UnknownUser;
                     }
 
+                    localId = data.Id;
+
                     if (data.UserBlocked)
-                    {
+                    {    
                         return VerifyResult.UserBlocked;
                     }
-
-                    int id = data.Id;
+                    
                     localToken = VerificationToken.Generate();
-                    t.Update("Users", new { VerificationToken = localToken.Data }, "@Id=id", new { id });
+                    t.Update("Users", new { VerificationToken = localToken.Data }, "Id=@id", new { id = localId });
                     return VerifyResult.Success;
                 });
             token = localToken;
+            id = localId;
             return result;
         }
 
@@ -239,7 +278,7 @@ namespace Sinbadsoft.Lib.UserManagement
                 return false;
             }
 
-            dynamic userInfo = this.ConnectionFactory.ReadOne(
+            dynamic userInfo = this.Connection.ReadOne(
                 "SELECT Id, Email, Password, Salt, EmailVerified, UserBlocked FROM Users WHERE Id=@id",
                 new { id });
 
@@ -250,19 +289,29 @@ namespace Sinbadsoft.Lib.UserManagement
 
             byte[] salt = null;
             var password = this.PasswordHasher.Hash(newPassword, ref salt);
-            this.ConnectionFactory.Update("Users", new { password, salt }, "Id=@id", new { id });
+            this.Connection.Update("Users", new { password, salt }, "Id=@id", new { id });
             return true;
         }
 
         public void SetBlocked(int id, bool blocked)
         {
-            this.ConnectionFactory.Update("Users", new { UserBlocked = blocked }, "Id=@id", new { id });
+            this.Connection.Update("Users", new { UserBlocked = blocked }, "Id=@id", new { id });
         }
 
-        public bool IsPasswordSet(int id)
+        public UserData LoadUserData(int id)
         {
-            var data = this.ConnectionFactory.ReadOne("SELECT Password FROM Users WHERE Id=@id", new { id });
-            return data != null && data.Password != null;
+            var userInfo = this.Connection.ReadOne(
+                "SELECT Id, Email, Password IS NOT NULL AS PasswordSet, EmailVerified, UserBlocked, VerificationToken FROM Users WHERE Id=@id",
+                new { id });
+            return CreateUserData(userInfo);
+        }
+
+        public UserData LoadUserData(string email)
+        {
+            var userInfo = this.Connection.ReadOne(
+                "SELECT Id, Email, Password IS NOT NULL AS PasswordSet, EmailVerified, UserBlocked, VerificationToken FROM Users WHERE Email=@email",
+                new { email });
+            return CreateUserData(userInfo);
         }
 
         private static bool AreNotNullAndEqual(byte[] a, byte[] b)
@@ -312,6 +361,23 @@ namespace Sinbadsoft.Lib.UserManagement
             }
 
             return VerifyResult.Success;
+        }
+
+        private static UserData CreateUserData(dynamic data)
+        {
+            return data == null
+                       ? null
+                       : new UserData
+                           {
+                               Id = data.Id,
+                               Email = data.Email,
+                               PasswordSet = data.PasswordSet != 0,
+                               EmailVerified = data.EmailVerified,
+                               UserBlocked = data.UserBlocked,
+                               VerificationToken = data.VerificationToken == null
+                                    ? null
+                                    : new VerificationToken(data.VerificationToken)
+                           };
         }
 
         private bool ValidatePassword(string password)

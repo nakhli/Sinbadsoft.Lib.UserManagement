@@ -36,7 +36,7 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
         public void EmailAlreadyTaken()
         {
             VerificationToken token;
-            var result = this.membership.Register("joe@example.com", "foobar", out token);
+            var result = this.membership.Register(TestData.JoeEmailNotVerifiedPasswordSet.Email, "foobar", out token);
             Assert.AreEqual(RegisterResult.DuplicateEmail, result);
         }
 
@@ -83,6 +83,20 @@ namespace Sinbadsoft.Lib.UserManagement.Tests
             VerificationToken token;
             var result = this.membership.Register("new-user@example.com", shortPassword, out token);
             Assert.AreEqual(RegisterResult.InvalidPassword, result);
+        }
+
+        [Test]
+        public void UserBlocked()
+        {
+            var email = TestData.RobertEmailVerifiedButBlocked.Email;
+            var password = TestData.RobertEmailVerifiedButBlocked.StringPassword;
+            var robertId = TestData.RobertEmailVerifiedButBlocked.Id;
+
+            VerificationToken token;
+            int id;
+            var result = this.membership.Register(email, password, out token, out id);
+            Assert.AreEqual(RegisterResult.UserBlocked, result);
+            Assert.AreEqual(robertId, id);
         }
     }
 }
