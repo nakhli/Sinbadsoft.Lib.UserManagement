@@ -376,7 +376,7 @@ namespace Sinbadsoft.Lib.UserManagement
                                UserBlocked = data.UserBlocked,
                                VerificationToken = data.VerificationToken == null
                                     ? null
-                                    : new VerificationToken(data.VerificationToken)
+                                    : new VerificationToken((byte[])data.VerificationToken)
                            };
         }
 

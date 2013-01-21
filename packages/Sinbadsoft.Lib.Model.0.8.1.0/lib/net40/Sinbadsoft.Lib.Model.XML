@@ -18,10 +18,9 @@
             is created and returned. Keys are converted to strings if they are not of type <see cref="T:System.String"/>.
             </description></item>
             <item><description>
-            <see cref="T:System.Data.IDataReader"/> then a new expando objet with the same column name-value pair of the current rader
-            row is created and returned. No <see cref="M:System.Data.IDataReader.Read"/> call is made 
-            and all <see cref="T:System.DBNull"/> values are converted to <see langword="null"/> or to the default
-            value of the hinted type if the type hint <paramref name="typeHint"/> parameter is provided.
+            <see cref="T:System.Data.IDataRecord"/> then a new expando objet with the same column name-value pair of the current rader
+            row is created and returned. All <see cref="T:System.DBNull"/> values are converted to <see langword="null"/> or to the default
+            value of the hint type if a <paramref name="typeHint"/> parameter is provided.
             </description></item>
             </list>
             </summary>

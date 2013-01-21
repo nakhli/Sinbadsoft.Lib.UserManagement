@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>MonkeyOrm.MySql</id>
+    <version>0.4.7.0</version>
+    <title>MonkeyOrm.MySql</title>
+    <authors>Sinbadsoft</authors>
+    <owners>Sinbadsoft</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://www.monkeyorm.com/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>MonkeyOrm is a small, powerful SQL-based ORM for .NET.
+Website: http://www.monkeyorm.com .
+Source code: https://github.com/Sinbadsoft/MonkeyOrm.
+Some of MonkeyOrm features and design choices:
+* Doesn’t pollute your code: no base classes to inherit from, no attributes and no xml config.
+* Easy to adopt, easy to get rid of: No lock-in, it’s just your POCOs and plain old SQL.
+* Stateless, no caching.
+* Built-in CRUD: Create, Read, Update, Delete and Create-or-Update (aka Upsert).
+* Transactions.
+* Objects slicing on insertion and update with a black list or a white list.
+* Bulk-fetching.
+* Data streaming.
+* Batch insertion, with fine-grained control on number of inserted objects per query.
+* Blobbing.</description>
+    <summary>MonkeyOrm is a small, powerful SQL-based ORM for .NET.
+Website: http://www.monkeyorm.com .
+Source code: https://github.com/Sinbadsoft/MonkeyOrm.
+Some of MonkeyOrm features and design choices:
+* Doesn’t pollute your code: no base classes to inherit from, no attributes and no xml config.
+* Easy to adopt, easy to get rid of: No lock-in, it’s just your POCOs and plain old SQL.
+* Stateless, no caching.
+* Built-in CRUD: Create, Read, Update, Delete and Create-or-Update (aka Upsert).
+* Transactions.
+* Objects slicing on insertion and update with a black list or a white list.
+* Bulk-fetching.
+* Data streaming.
+* Batch insertion, with fine-grained control on number of inserted objects per query.
+* Blobbing.</summary>
+    <releaseNotes>* Strongly typed reads: now ReadOne, ReadAll and ReadStream can return custom user types.</releaseNotes>
+    <copyright>Copyright (c) Chaker Nakhli 2010-2013. Licensed under the Apache License, Version 2.0</copyright>
+    <language>en-US</language>
+    <tags>orm dal database mysql</tags>
+    <dependencies>
+      <dependency id="Sinbadsoft.Lib.Model" />
+      <dependency id="MySql.Data" version="6.6.4" />
+    </dependencies>
+    <references>
+      <reference file="MonkeyOrm.MySql.dll" />
+    </references>
+  </metadata>
+</package>

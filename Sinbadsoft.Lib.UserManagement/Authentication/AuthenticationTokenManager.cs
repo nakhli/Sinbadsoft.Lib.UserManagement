@@ -41,9 +41,10 @@ namespace Sinbadsoft.Lib.UserManagement.Authentication
                 {
                     return userInfo;
                 }
+                
+                this.Remove();
             }
 
-            this.Remove();
             return null;
         }
     }
