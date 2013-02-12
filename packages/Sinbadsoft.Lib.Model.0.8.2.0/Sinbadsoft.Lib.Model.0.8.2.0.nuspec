@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Sinbadsoft.Lib.Model</id>
-    <version>0.8.1.0</version>
+    <version>0.8.2.0</version>
     <title>Sinbadsoft.Lib.Model</title>
     <authors>Sinbadsoft</authors>
     <owners>Sinbadsoft</owners>
@@ -17,7 +17,7 @@
 (1) Converting objects of any type, dictionaries, data readers and anonymous to expando object;
 (2) Slicing objects by specifying either a list of properties to keep or to exclude;
 (3) Converting from any type to any type based on property name and using a flexible convertion strategy.</summary>
-    <releaseNotes>- Fix DbNull.Value sometimes dosen't get converted to null</releaseNotes>
+    <releaseNotes>- Added conversion DateTime to/from Long through ToBinary()/FromBinary() methods.</releaseNotes>
     <copyright>Copyright (c) Chaker Nakhli 2010-2013. Licensed under the Apache License, Version 2.0</copyright>
     <language>en-US</language>
     <tags>model dynamic conversion type</tags>

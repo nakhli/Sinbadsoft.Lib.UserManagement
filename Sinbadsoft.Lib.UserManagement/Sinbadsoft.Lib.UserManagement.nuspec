@@ -17,8 +17,7 @@
     <dependencies>
     </dependencies>
     <releaseNotes>
-      * Fixed bug extra data missing in auth ticket
-      * AuthenticatedUserInfo consturctor changed to public
+      * updated nuget dependencies
     </releaseNotes>
   </metadata>
 </package>
