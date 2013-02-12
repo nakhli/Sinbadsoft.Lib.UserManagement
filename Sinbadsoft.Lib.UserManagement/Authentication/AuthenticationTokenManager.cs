@@ -1,5 +1,5 @@
 // <copyright file="AuthenticationTokenManager.cs" company="Sinbadsoft">
-// Copyright (c) Chaker Nakhli 2010-2012
+// Copyright (c) Chaker Nakhli 2010-2013
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by 
@@ -23,7 +23,7 @@ namespace Sinbadsoft.Lib.UserManagement.Authentication
     {
         public void Set(string email, int id, bool persistent = false, string data = null)
         {
-            string ticket = AuthenticationToken.Generate(email, id);
+            string ticket = AuthenticationToken.Generate(email, id, data);
             FormsAuthentication.SetAuthCookie(ticket, persistent);
         }
 

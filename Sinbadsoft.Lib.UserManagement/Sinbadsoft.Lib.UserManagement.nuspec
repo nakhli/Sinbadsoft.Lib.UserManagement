@@ -13,12 +13,12 @@
     <owners>Sinbadsoft</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/Sinbadsoft/Sinbadsoft.Lib.UserManagement</projectUrl>
-    <copyright>Copyright (c) Chaker Nakhli 2010-2012. Licensed under the Apache License, Version 2.0</copyright>
+    <copyright>Copyright (c) Chaker Nakhli 2010-2013. Licensed under the Apache License, Version 2.0</copyright>
     <dependencies>
     </dependencies>
     <releaseNotes>
-      * Added LoadUserData methods on IUserManager. They replace IsPasswordSet method, removed.
-      * Added new constructors for UserManager. 
+      * Fixed bug extra data missing in auth ticket
+      * AuthenticatedUserInfo consturctor changed to public
     </releaseNotes>
   </metadata>
 </package>

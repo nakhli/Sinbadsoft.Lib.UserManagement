@@ -1,5 +1,5 @@
 // <copyright file="AuthenticationToken.cs" company="Sinbadsoft">
-// Copyright (c) Chaker Nakhli 2010-2012
+// Copyright (c) Chaker Nakhli 2010-2013
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by 
@@ -62,7 +62,7 @@ namespace Sinbadsoft.Lib.UserManagement.Authentication
             return new AuthenticatedUserInfo(id, email, data);
         }
 
-        public static string Generate(string email, int id, string data = "")
+        public static string Generate(string email, int id, string data = null)
         {
             return string.Format(CultureInfo.InvariantCulture, "{0};{1};{2}", email, id, data ?? string.Empty);
         }
