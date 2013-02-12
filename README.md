@@ -2,6 +2,6 @@ Simple lightweight membreship and authentication library. Comes with built in em
 Simple db schema: uses a single table transparent, no stored procedures. The table is part of the api and can be use by client code for joins etc.
 
 # License
-Copyright 2012-2013 [Sinbasdoft](http://www.sinbadsoft.com).
+Copyright 2012-2013 [Sinbadsoft](http://www.sinbadsoft.com).
 
 Licensed under the Apache License, [Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
